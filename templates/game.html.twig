@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block aside %}
+    <aside class="bg-primary-subtle p-4 h-100 position-fixed" style="top: 82px;">
+        <h4>Leaderboard</h4>
+        <ol class="list-group list-group-flush list-group-numbered">
+            {% for user in users() %}
+                <li class="list-group-item list-group-item-primary">
+                    {{ user.username }} ({{ user.points | number_format }})
+                </li>
+            {% endfor %}
+        </ol>
+    </aside>
+{% endblock %}
+
+{% block centerHeader %}
+    <form class="input-group" action="{{ path('game_create') }}" method="post" {{ stimulus_controller('form') }}>
+        <select name="bingo" class="form-select bg-light text-dark border-light">
+            {% for bingo in bingo_list() %}
+                <option value="{{ bingo.id }}">{{ bingo.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-outline-light" type="submit">
+            <i class="bi bi-controller" title="Start new game"></i>
+        </button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div
+        class="modal{% if bingo %} d-block show{% endif %}"
+        {{ stimulus_controller('bingo') }}
+        {{ stimulus_action('bingo','bingo','game:bingo@window') }}
+        {{ stimulus_target('bingo', 'bingo') }}
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h1>BINGO !</h1>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href="{{ path('game_reset') }}">Nice !</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-5 justify-content-around">
+        {% for game_text in game_texts %}
+            <div
+                class="col row position-relative"
+                style="height: 128px; aspect-ratio: 1/1;"
+                data-game-url-value="{{ path('game_toggle_field', {'gameText':game_text.id}) }}"
+                data-game-bingo-value="{{ bingo ? 'true' : 'false' }}"
+                {{ stimulus_action('game', 'bingo', 'game:bingo@window') }}
+                {{ stimulus_controller('game') }}
+            >
+                <button
+                    class="btn btn-outline-primary position-relative{% if game_text.active %} active{% endif %}"
+                    {{ stimulus_target('game', 'button') }}
+                    {{ stimulus_action('game', 'toggleField', 'click') }}
+                >
+                    <i class="d-none bi bi-exclamation-triangle-fill text-danger" {{ stimulus_target('game', 'error') }} title="Could not toggle field"></i>
+                    <span>{{ game_text.bingoText.text }}</span>
+                </button>
+                <div
+                    class="d-none bg-dark bg-opacity-75 position-absolute z-1 w-100 h-100 d-flex align-items-center justify-content-center"
+                    {{ stimulus_target('game', 'loading') }}
+                >
+                    <div class="spinner-grow"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

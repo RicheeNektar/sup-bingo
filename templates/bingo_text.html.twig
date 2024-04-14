@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row position-relative">
+        <h3>Bingos</h3>
+
+        <form id="delete" action="./delete" method="post" {{ stimulus_controller('form') }}></form>
+
+        {{ form_start(create_bingo_text, {'attr': stimulus_controller('form').toArray()}) }}
+            <div class="input-group">
+                {{ form_widget(create_bingo_text.text, {'attr':{'autofocus':true}}) }}
+                {{ form_widget(create_bingo_text.submit) }}
+            </div>
+            {{ form_errors(create_bingo_text.text) }}
+        {{ form_end(create_bingo_text) }}
+
+        <div class="col row row-cols-5 justify-content-center mt-3">
+            {% for text in texts %}
+                <form class="col row d-flex align-items-center" action="./update" method="post" {{ stimulus_controller('form') }}>
+                    <div class="border p-3">
+                        <div class="row mb-3">
+                            <div class="btn-group">
+                                <button
+                                    class="btn btn-primary"
+                                    name="bingo_text_id"
+                                    value="{{ text.id }}"
+                                    type="submit"
+                                >
+                                    <i class="bi bi-floppy-fill"></i>
+                                </button>
+                                <button
+                                    class="btn btn-outline-danger"
+                                    form="delete"
+                                    type="submit"
+                                    name="bingo_text_id"
+                                    value="{{ text.id }}"
+                                >
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label>
+                                <textarea class="form-control" name="text">{{ text.text }}</textarea>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

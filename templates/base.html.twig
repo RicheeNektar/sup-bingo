@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Support Bingo{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body data-bs-theme="dark" class="d-grid">
+        {% block body %}
+            <header class="row p-3 m-0 bg-primary sticky-top">
+                <div id="header-blocker" class="d-none position-absolute z-1 w-100 h-100 start-0 top-0">
+                </div>
+                <div class="col d-flex align-items-center">
+                    <h4>Sup Bingo, {{ app.user.username }}!</h4>
+                </div>
+                <div class="col row align-items-center">
+                    {% block centerHeader %}
+                        <div class="text-center">
+                            <a class="btn btn-outline-light" href="{{ path('game') }}" title="Zurück zum Spiel">
+                                <i style="font-size: 1.5rem" class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                    {% endblock %}
+                </div>
+                <div class="col text-end">
+                    {% set logout_button %}
+                        <a class="btn btn-outline-light" href="{{ logout_url() }}" title="Logout">
+                            <i style="font-size: 1.5rem" class="bi bi-power"></i>
+                        </a>
+                    {% endset %}
+
+                    {% if app.user.role is constant('App\\Entity\\User\\Role::Admin') %}
+                        <div class="btn-group">
+                            <a class="btn btn{% if not (app.request.pathInfo matches '/\\/user/') %}-outline{% endif %}-light" href="{{ path('user_list') }}" title="User Management">
+                                <i style="font-size: 1.5rem" class="bi bi-person-fill-gear"></i>
+                            </a>
+                            <a class="btn btn{% if not (app.request.pathInfo matches '/\\/bingo/') %}-outline{% endif %}-light" href="{{ path('bingo_list') }}" title="Bingo Management">
+                                <i style="font-size: 1.5rem" class="bi bi-database-fill-gear"></i>
+                            </a>
+                            {{ logout_button }}
+                        </div>
+                    {% else %}
+                        {{ logout_button }}
+                    {% endif %}
+                </div>
+            </header>
+
+            {% block aside %}
+            {% endblock %}
+
+            <main class="container mt-3 position-relative">
+                <div id="main-blocker" class="d-none bg-dark bg-opacity-75 position-absolute z-1 w-100 h-100 start-0 top-0 d-flex align-items-center justify-content-center">
+                    <div class="spinner-grow"></div>
+                </div>
+
+                {% set flashes = app.flashes('error') %}
+                {% if flashes | length > 0 %}
+                    <div class="alert alert-danger alert-dismissible show" id="error-alert">
+                        <i class="bi bi-exclamation-triangle-fill float-start"></i>
+                        <ul class="list-group list-group-flush list-inline">
+                            {% for flash in flashes %}
+                                <li class="list-group-item list-group-item-danger list-inline-item">{{ flash }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button class="btn btn-close btn-close-white" type="button" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+            </main>
+        {% endblock %}
+    </body>
+</html>

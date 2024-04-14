@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col position-relative">
+            <h3>Users</h3>
+
+            <form id="delete" action="{{ path('user_delete') }}" method="post" {{ stimulus_controller('form') }}></form>
+            <form id="reset" action="{{ path('user_game_reset') }}" method="post" {{ stimulus_controller('form') }}></form>
+
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr
+                            {{ stimulus_controller('user') }}
+                            data-user-username-value="{{ user.username }}"
+                            data-user-url-value="{{ path('user_role') }}"
+                        >
+                            <td class="align-middle">{{ user.username }}</td>
+                            <td class="position-relative">
+                                <div class="d-none bg-dark bg-opacity-75 position-absolute z-1 w-100 h-100 start-0 top-0 d-flex align-items-center justify-content-center"
+                                        {{ stimulus_target('user', 'loading') }}>
+                                    <div class="spinner-grow"></div>
+                                </div>
+                                <select
+                                    class="form-select"
+                                    {{ stimulus_target('user', 'select') }}
+                                    {{ stimulus_action('user', 'changeRole', 'change') }}
+                                >
+                                    {% for role in roles %}
+                                        <option
+                                            value="{{ role.value }}"
+                                            {% if user.role == role %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ role.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    {% if user.game %}
+                                        <button
+                                                form="reset"
+                                                type="submit"
+                                                title="Delete game of user"
+                                                class="btn btn-outline-danger"
+                                                name="username"
+                                                value="{{ user.username }}"
+                                                onclick="return confirm('Reset game of {{ user.username }}?')"
+                                        >
+                                            <i class="bi bi-joystick"></i>
+                                        </button>
+                                    {% endif %}
+                                    <button
+                                        form="delete"
+                                        type="submit"
+                                        title="Delete User"
+                                        class="btn btn-outline-danger"
+                                        name="username"
+                                        value="{{ user.username }}"
+                                        onclick="return confirm('Delete {{ user.username }}?')"
+                                    >
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <div class="row position-relative">
+                <h3>Create user</h3>
+                {{ form(register_form, {'attr': stimulus_controller('form').toArray()}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

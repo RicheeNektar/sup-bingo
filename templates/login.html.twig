@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="modal fade show" style="display: block">
+        <div class="modal-dialog ">
+            {{ form_start(login_form, {'attr':{'class':'modal-content'}}) }}
+                <div class="modal-header bg-primary">
+                    <b>Please login to play</b>
+                </div>
+                <div class="modal-body">
+                    {% if last_error %}
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle-fill"></i> {{ last_error }}
+                        </div>
+                    {% endif %}
+                    {{ form_row(login_form.username) }}
+                    {{ form_row(login_form.password) }}
+                </div>
+                <div class="modal-footer">
+                    {{ form_widget(login_form.submit) }}
+                </div>
+            {{ form_end(login_form) }}
+        </div>
+    </div>
+{% endblock %}

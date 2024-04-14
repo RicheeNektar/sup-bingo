@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col position-relative">
+            <h3>Bingos</h3>
+
+            <form id="delete" action="{{ path('bingo_delete') }}" method="post" {{ stimulus_controller('form') }}></form>
+
+            <table class="table table-borderless">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bingo in bingos %}
+                    <tr>
+                        <td class="align-middle">
+                            {{ bingo.name }}
+                            {% if bingo.getBingoTexts()|length < 25 %}
+                                <i class="bi bi-exclamation-triangle-fill text-danger" title="Not enough Texts"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-primary" href="{{ path('bingo_text_list', {'bingo': bingo.id}) }}">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <button
+                                    class="btn btn-outline-danger"
+                                    form="delete"
+                                    type="submit"
+                                    name="bingo"
+                                    value="{{ bingo.id }}"
+                                    onclick="return confirm('Delete {{ bingo.name }}?')"
+                                >
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <div class="row position-relative">
+                <h3>Create Bingo</h3>
+
+                {{ form_start(create_bingo, {'attr': stimulus_controller('form').toArray()}) }}
+                    <div class="row">
+                        {{ form_errors(create_bingo) }}
+                        <div class="col">
+                            {{ form_label(create_bingo.name) }}
+                        </div>
+                        <div class="col col-8">
+                            <div class="input-group">
+                                {{ form_widget(create_bingo.name) }}
+                                {{ form_widget(create_bingo.submit) }}
+                            </div>
+                        </div>
+                    </div>
+                {{ form_end(create_bingo) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
