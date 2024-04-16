@@ -52,7 +52,8 @@ class GameRepository extends AbstractRepository
 
             if ($i % 6 === 0) {
                 $diag[0] += $p;
-            } else if ($i % 4 === 0 && $i > 1 && $i < 24) {
+            }
+            if ($i % 4 === 0 && $i > 1 && $i < 24) {
                 $diag[1] += $p;
             }
         }

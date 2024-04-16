@@ -6,7 +6,8 @@
             <h3>Users</h3>
 
             <form id="delete" action="{{ path('user_delete') }}" method="post" {{ stimulus_controller('form') }}></form>
-            <form id="reset" action="{{ path('user_game_reset') }}" method="post" {{ stimulus_controller('form') }}></form>
+            <form id="reset-game" action="{{ path('user_game_reset') }}" method="post" {{ stimulus_controller('form') }}></form>
+            <form id="reset-score" action="{{ path('user_score_reset') }}" method="post" {{ stimulus_controller('form') }}></form>
 
             <table class="table table-borderless">
                 <thead>
@@ -50,7 +51,7 @@
                                 <div class="btn-group">
                                     {% if user.game %}
                                         <button
-                                                form="reset"
+                                                form="reset-game"
                                                 type="submit"
                                                 title="Delete game of user"
                                                 class="btn btn-outline-danger"
@@ -59,6 +60,20 @@
                                                 onclick="return confirm('Reset game of {{ user.username }}?')"
                                         >
                                             <i class="bi bi-joystick"></i>
+                                        </button>
+                                    {% endif %}
+                                    {% if user.points != '0' %}
+                                        <button
+                                                form="reset-score"
+                                                type="submit"
+                                                title="Reset user score"
+                                                class="btn btn-outline-danger"
+                                                name="username"
+                                                value="{{ user.username }}"
+                                                onclick="return confirm('Reset score of {{ user.username }}?')"
+                                        >
+                                            {{ user.points }}
+                                            <i class="bi bi-eraser-fill"></i>
                                         </button>
                                     {% endif %}
                                     <button

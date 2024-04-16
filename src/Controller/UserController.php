@@ -72,7 +72,7 @@ class UserController extends AbstractController
         return $this->json([], Response::HTTP_NOT_FOUND);
     }
 
-    #[Route(path: '/user/reset', name: 'user_game_reset', methods: [Request::METHOD_POST])]
+    #[Route(path: '/user/reset/game', name: 'user_game_reset', methods: [Request::METHOD_POST])]
     public function resetGame(Request $request): Response
     {
         $user = $this->userRepository->find($request->request->get('username'));
@@ -84,6 +84,19 @@ class UserController extends AbstractController
                 $game->setUser(null);
                 $this->userRepository->save();
             }
+        }
+
+        return $this->redirectToRoute('user_list');
+    }
+
+    #[Route(path: '/user/reset/score', name: 'user_score_reset', methods: [Request::METHOD_POST])]
+    public function resetScore(Request $request): Response
+    {
+        $user = $this->userRepository->find($request->request->get('username'));
+
+        if ($user) {
+            $user->points = '0';
+            $this->userRepository->save();
         }
 
         return $this->redirectToRoute('user_list');
