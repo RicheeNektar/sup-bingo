@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\GameText;
 use App\Repository\BingoRepository;
 use App\Repository\GameRepository;
@@ -23,14 +24,19 @@ final class GameController extends AbstractController
     #[Route(path: '/', name: 'game')]
     public function game(): Response
     {
+        /** @var Game $game */
         $game = $this->getUser()->getGame();
+        $gameTexts = $game?->getGameTexts() ?? [];
 
         return $this->render(
             'game.html.twig',
             [
                 'game' => $game,
-                'game_texts' => $game?->getGameTexts() ?? [],
+                'game_texts' => $gameTexts,
                 'bingo' => $game && $this->gameRepository->calculateBingo($game),
+                'bingo_selected' => isset($gameTexts[0])
+                    ? $gameTexts[0]->getBingoText()->getBingo()->getId()
+                    : 0,
             ]
         );
     }

@@ -17,7 +17,7 @@
     <form class="input-group" action="{{ path('game_create') }}" method="post" {{ stimulus_controller('form') }}>
         <select name="bingo" class="form-select bg-light text-dark border-light">
             {% for bingo in bingo_list() %}
-                <option value="{{ bingo.id }}">{{ bingo.name }}</option>
+                <option value="{{ bingo.id }}"{% if bingo.id == bingo_selected %} selected{% endif %}>{{ bingo.name }}</option>
             {% endfor %}
         </select>
         <button class="btn btn-outline-light" type="submit">
