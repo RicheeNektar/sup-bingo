@@ -47,7 +47,7 @@
     <div class="row row-cols-5 justify-content-around">
         {% for game_text in game_texts %}
             <div
-                class="col row position-relative"
+                class="col row position-relative mb-4"
                 style="height: 128px; aspect-ratio: 1/1;"
                 data-game-url-value="{{ path('game_toggle_field', {'gameText':game_text.id}) }}"
                 data-game-bingo-value="{{ bingo ? 'true' : 'false' }}"
