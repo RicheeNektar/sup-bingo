@@ -34,6 +34,7 @@ class GameRepository extends AbstractRepository
         $xPoints = 0;
         $yPoints = [0,0,0,0,0];
         $bingo = false;
+        $diag = [0,0];
 
         for ($i = 0; $i < 25; $i++) {
             $x = $i % 5;
@@ -48,12 +49,22 @@ class GameRepository extends AbstractRepository
             $p = (int)$texts[$i]->isActive();
             $yPoints[$x] += $p;
             $xPoints += $p;
+
+            if ($i % 6 === 0) {
+                $diag[0] += $p;
+            } else if ($i % 4 === 0 && $i > 1 && $i < 24) {
+                $diag[1] += $p;
+            }
         }
 
         if (!$bingo) {
-            for ($y = 0; $y < 5; $y++) {
-                if ($bingo = $yPoints[$y] === 5) {
-                    break;
+            $bingo = $diag[0] === 5 || $diag[1] === 5;
+
+            if (!$bingo) {
+                for ($y = 0; $y < 5; $y++) {
+                    if ($bingo = $yPoints[$y] === 5) {
+                        break;
+                    }
                 }
             }
         }
