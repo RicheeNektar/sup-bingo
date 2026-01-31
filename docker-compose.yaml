@@ -1,11 +1,20 @@
 services:
   php:
-    image: php:8.4-apache-trixie
-    ports:
-      - "8080:80"
+    build:
+      dockerfile: ./docker/php.Dockerfile
+      context: ./
     volumes:
       - ./:/var/www/html
-      - ./var/log/docker:/var/log/
+    networks:
+      bingo:
+
+  httpd:
+    image: httpd:alpine
+    volumes:
+      - ./:/var/www/html
+      - ./docker/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    ports:
+      - "8080:80"
     networks:
       bingo:
 
