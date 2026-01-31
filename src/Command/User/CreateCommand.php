@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand('bingo:user:create')]
@@ -27,11 +28,11 @@ final class CreateCommand extends Command
     {
         parent::configure();
         $this->addArgument('username', InputArgument::REQUIRED);
-        $this->addArgument('password', InputArgument::REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
         $username = $input->getArgument('username');
 
         if ($this->userRepository->find($username)) {
@@ -41,7 +42,7 @@ final class CreateCommand extends Command
 
         $user = new User();
         $user->setUsername($username);
-        $user->setPassword($this->userPasswordHasher->hashPassword($user, $input->getArgument('password')));
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, $io->askHidden('Password:')));
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
