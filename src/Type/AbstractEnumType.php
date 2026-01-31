@@ -23,7 +23,7 @@ class AbstractEnumType extends Type
         return sprintf('ENUM (%s)', implode(',', $values));
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         if (is_string($value)) {
             return $value;
