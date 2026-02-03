@@ -21,6 +21,6 @@ final class Version20240413120041 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE user DROP points');
+        // No turning back
     }
 }

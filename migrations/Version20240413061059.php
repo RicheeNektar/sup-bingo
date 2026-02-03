@@ -44,9 +44,6 @@ final class Version20240413061059 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE `bingo_text` DROP FOREIGN KEY `fk_bingo_text_bingo_id`');
-        $this->addSql('DROP TABLE `bingo_text`');
-        $this->addSql('DROP TABLE `bingo`');
-        $this->addSql('DROP TABLE `user`');
+        // No turning back
     }
 }

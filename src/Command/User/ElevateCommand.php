@@ -29,7 +29,7 @@ final class ElevateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $newAdmin = $this->userRepository->find($input->getArgument('username'));
+        $newAdmin = $this->userRepository->findOneBy(['username' => $input->getArgument('username')]);
         if ($newAdmin) {
             $newAdmin->setRole(Role::Admin);
 

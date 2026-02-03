@@ -63,7 +63,7 @@ final class GameController extends AbstractController
         $oldGame = $user->getGame();
         if ($oldGame) {
             if ($this->gameRepository->calculateBingo($oldGame)) {
-                $user->setPoints($user->getPoints() + 1);
+                //$user->setPoints($user->getPoints() + 1);
             }
             $this->gameRepository->delete($oldGame);
         }
@@ -98,7 +98,7 @@ final class GameController extends AbstractController
 
         if ($oldGame) {
             if ($this->gameRepository->calculateBingo($oldGame)) {
-                $user->setPoints($user->getPoints() + 1);
+                //$user->setPoints($user->getPoints() + 1);
             }
             $user->setGame(null);
             $this->gameRepository->delete($oldGame);

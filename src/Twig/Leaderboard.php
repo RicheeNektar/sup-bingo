@@ -22,6 +22,6 @@ final class Leaderboard extends AbstractExtension
 
     public function __invoke(): array
     {
-        return $this->userRepository->findBy([], ['points' => 'DESC']);
+        return $this->userRepository->findBy([], []);
     }
 }

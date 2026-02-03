@@ -1,10 +1,11 @@
 services:
   php:
     build:
-      dockerfile: ./docker/php.Dockerfile
+      dockerfile: docker/php/Dockerfile
       context: ./
     volumes:
       - ./:/var/www/html
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     networks:
       bingo:
 

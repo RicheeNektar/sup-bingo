@@ -37,16 +37,6 @@ final class Version20240413150848 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('
-            ALTER TABLE `game` CHANGE `user_id` `user_id` VARCHAR(32) NOT NULL
-        ');
-        $this->addSql('DROP INDEX `uk_user_game_id` ON `user`');
-        $this->addSql('
-            ALTER TABLE `game`
-                DROP INDEX `uk_game_user_id`,
-                ADD INDEX `ix_game_user_id` (`user_id`)
-        ');
-        $this->addSql('ALTER TABLE `user` DROP FOREIGN KEY `fk_user_game_id_game_id`');
-        $this->addSql('ALTER TABLE `user` DROP `game_id`');
+        // No turning back
     }
 }

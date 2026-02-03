@@ -35,14 +35,14 @@ final class CreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $username = $input->getArgument('username');
 
-        if ($this->userRepository->find($username)) {
+        if (!empty($this->userRepository->findBy(['username' => $username]))) {
             $output->writeln("$username already exists.");
             return Command::FAILURE;
         }
 
         $user = new User();
         $user->setUsername($username);
-        $user->setPassword($this->userPasswordHasher->hashPassword($user, $io->askHidden('Password:')));
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, $io->askHidden('Password')));
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

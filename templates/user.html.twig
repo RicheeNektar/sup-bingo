@@ -62,20 +62,6 @@
                                             <i class="bi bi-joystick"></i>
                                         </button>
                                     {% endif %}
-                                    {% if user.points != '0' %}
-                                        <button
-                                                form="reset-score"
-                                                type="submit"
-                                                title="Reset user score"
-                                                class="btn btn-outline-danger"
-                                                name="username"
-                                                value="{{ user.username }}"
-                                                onclick="return confirm('Reset score of {{ user.username }}?')"
-                                        >
-                                            {{ user.points }}
-                                            <i class="bi bi-eraser-fill"></i>
-                                        </button>
-                                    {% endif %}
                                     <button
                                         form="delete"
                                         type="submit"

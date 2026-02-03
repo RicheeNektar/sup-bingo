@@ -5,16 +5,25 @@ namespace App\Entity;
 use App\Entity\User\Role;
 use App\Repository\UserRepository;
 use App\Type\UserRoleType;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id, ORM\Column(type: 'string', length: 32, nullable: false)]
+    #[
+        ORM\Id,
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(UlidGenerator::class),
+        ORM\Column(type: UlidType::NAME),
+    ]
+    public Ulid $ulid;
+
+    #[ORM\Column(type: 'string', length: 32, unique: true, nullable: false)]
     public string $username;
 
     #[ORM\Column(type: 'string', nullable: false)]
@@ -23,15 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: UserRoleType::NAME, nullable: false)]
     public Role $role = Role::User;
 
-    #[ORM\Column(type: 'bigint')]
-    public string $points = '0';
-
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Game $game = null;
-
-    public function __construct()
-    {
-    }
 
     public function getUsername(): string
     {
@@ -75,20 +77,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function getPoints(): string
+    public function getUlid(): Ulid
     {
-        return $this->points;
-    }
-
-    public function setPoints(string $points): self
-    {
-        $this->points = $points;
-        return $this;
+        return $this->ulid;
     }
 
     public function __serialize(): array
     {
         return [
+            'ulid' => (string) $this->ulid,
             'username' => $this->getUsername(),
             'password' => $this->getPassword(),
             'role' => $this->role->value,
@@ -97,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __unserialize(array $data): void
     {
+        $this->ulid = Ulid::fromString($data['ulid']);
         $this->setUsername($data['username']);
         $this->setPassword($data['password']);
         $this->setRole(Role::from($data['role']));

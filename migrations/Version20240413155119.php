@@ -23,8 +23,6 @@ final class Version20240413155119 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE `game` ADD `user_id` VARCHAR(32) DEFAULT NULL');
-        $this->addSql('ALTER TABLE `game` ADD CONSTRAINT `fk_user_id_user_username` FOREIGN KEY (`user_id`) REFERENCES `user` (`username`)');
-        $this->addSql('CREATE UNIQUE INDEX `uk_game_user_id` ON `game` (`user_id`)');
+        // No turning back
     }
 }
